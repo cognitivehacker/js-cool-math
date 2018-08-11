@@ -1,3 +1,3 @@
 import square from '@/square'
 
-console.log('hahaha, zxczxczxc zfdxfxdx', square.name)
+console.log(square.name, square.init())

@@ -11,28 +11,15 @@ export default {
   centerY: null,
   pX: null,
   pY: null,
+
   shape(){
     this.context.fillStyle = 'green'
     this.context.fillRect(this.margin, this.margin, this.shapeWidth, this.shapeHeight)
-
-    this.context.fillStyle = '#66cdaa';
-    this.context.beginPath();
-    this.context.arc(this.centerX, this.centerY, 5, 0, Math.PI*2, true)
-    this.context.fill();
   },
 
-  line(){
-    this.context.beginPath()
-    this.context.moveTo(this.centerX, this.centerY)
-    this.context.lineTo(this.pX, this.pY)
-    this.context.closePath();
-    this.context.lineWidth = 5;
-    this.context.strokeStyle = '#66cdaa';
-    this.context.stroke();
-  },
+  perimeterLine() {
 
-  dot() {
-
+    //Calc perimeter position
     let maxTop = this.margin + this.shapeWidth
     let maxRight = this.margin + this.shapeHeight
     let maxLeft = this.margin
@@ -53,24 +40,47 @@ export default {
         break
     }
 
-    this.context.fillStyle = '#66cdaa';
-    this.context.beginPath();
+    // create perimeter dot
+    this.context.fillStyle = '#66cdaa'
+    this.context.beginPath()
     this.context.arc(this.pX, this.pY, 5, 0, Math.PI*2, true)
-    this.context.fill();
+    this.context.fill()
+
+    // crate center dot
+    this.context.fillStyle = '#66cdaa'
+    this.context.beginPath()
+    this.context.arc(this.centerX, this.centerY, 5, 0, Math.PI*2, true)
+    this.context.fill()
+
+    // create line between perimeter dot and center dot
+    this.context.beginPath()
+    this.context.moveTo(this.centerX, this.centerY)
+    this.context.lineTo(this.pX, this.pY)
+    this.context.closePath()
+    this.context.lineWidth = 5
+    this.context.strokeStyle = '#66cdaa'
+    this.context.stroke()
 
   },
+
+  graphLine(){
+
+  },
+
   clear(){
-    this.context.fillStyle = 'black';
+    this.context.fillStyle = 'black'
     this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
 
   },
+
   loop(){
     this.clear()
     this.shape()
-    this.dot()
-    this.line()
+    this.perimeterLine()
+    this.graphLine()
     canvas.animationFrame(this.loop.bind(this))
   },
+
   init(){
     window.onload = () => {
       this.canvas = document.getElementById(this.name)

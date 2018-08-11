@@ -1,7 +1,11 @@
-import canvas from '@/canvas'
+import Canvas from '@/helper/canvas'
+import graphLine from '@/helper/graph-line'
+
+const canvas = new Canvas()
 
 export default {
   name: "square",
+  color: '#66cdaa',
   context: null,
   canvas: null,
   margin: null,
@@ -13,33 +17,34 @@ export default {
   pY: null,
   lineArray: [],
   maxLineArray: null,
+
   shape(){
-    this.context.fillStyle = 'green'
-    this.context.fillRect(this.margin, this.margin, this.shapeWidth, this.shapeHeight)
+    canvas.context.fillStyle = 'green'
+    canvas.context.fillRect(this.margin, this.margin, this.shapeWidth, this.shapeHeight)
   },
 
   perimeterLine() {
 
     // create perimeter dot
-    this.context.fillStyle = '#66cdaa'
-    this.context.beginPath()
-    this.context.arc(this.pX, this.pY, 5, 0, Math.PI*2, true)
-    this.context.fill()
+    canvas.context.fillStyle = this.color
+    canvas.context.beginPath()
+    canvas.context.arc(this.pX, this.pY, 5, 0, Math.PI*2, true)
+    canvas.context.fill()
 
     // crate center dot
-    this.context.fillStyle = '#66cdaa'
-    this.context.beginPath()
-    this.context.arc(this.centerX, this.centerY, 5, 0, Math.PI*2, true)
-    this.context.fill()
+    canvas.context.fillStyle = this.color
+    canvas.context.beginPath()
+    canvas.context.arc(this.centerX, this.centerY, 5, 0, Math.PI*2, true)
+    canvas.context.fill()
 
     // create line between perimeter dot and center dot
-    this.context.beginPath()
-    this.context.moveTo(this.centerX, this.centerY)
-    this.context.lineTo(this.pX, this.pY)
-    this.context.closePath()
-    this.context.lineWidth = 5
-    this.context.strokeStyle = '#66cdaa'
-    this.context.stroke()
+    canvas.context.beginPath()
+    canvas.context.moveTo(this.centerX, this.centerY)
+    canvas.context.lineTo(this.pX, this.pY)
+    canvas.context.closePath()
+    canvas.context.lineWidth = 5
+    canvas.context.strokeStyle = this.color
+    canvas.context.stroke()
 
     //Calc perimeter position
     let maxTop = this.margin + this.shapeWidth
@@ -64,51 +69,26 @@ export default {
 
   },
 
-  graphLine(){
-
-    this.lineArray.unshift(this.pY)
-
-    if( this.lineArray.length > this.maxLineArray )
-      this.lineArray.pop()
-
-    let groupIndex = 0
-
-    for ( let index = 0 ; index < this.lineArray.length; index++ ){
-      this.context.fillStyle = '#66cdaa'
-      this.context.beginPath()
-      this.context.arc(this.graphLineX + index, this.lineArray[index], 2, 0, Math.PI*2, true)
-      this.context.fill()
-      this.context.closePath()
-    }
-
-  },
-
-  clear(){
-    this.context.fillStyle = 'black'
-    this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
-
-  },
-
   loop(){
-    this.clear()
+    canvas.clear('black')
     this.shape()
     this.perimeterLine()
-    this.graphLine()
+    graphLine.draw(canvas.context, this.lineArray, this.maxLineArray, this.graphLineX, this.pY)
     canvas.animationFrame(this.loop.bind(this))
   },
 
   init(){
+    graphLine.color = this.color
     window.onload = () => {
-      this.canvas = document.getElementById(this.name)
-    	this.context = this.canvas.getContext('2d')
-      this.margin = ( this.canvas.height - this.shapeHeight ) / 2
+      canvas.get(this.name)
+      this.margin = ( canvas.target.height - this.shapeHeight ) / 2
       this.shapePerimeter = ( this.shapeWidth * 2 ) + ( this.shapeHeight * 2 )
       this.pX = this.margin
       this.pY = this.margin
       this.centerX = this.margin + ( this.shapeWidth / 2 )
       this.centerY = this.margin + ( this.shapeHeight / 2 )
       this.graphLineX = ( this.margin * 2 ) + this.shapeWidth
-      this.maxLineArray = this.canvas.width - ( this.margin * 3 ) - this.shapeWidth
+      this.maxLineArray = canvas.target.width - ( this.margin * 3 ) - this.shapeWidth
       this.loop()
     }
   }

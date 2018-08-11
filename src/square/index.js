@@ -11,34 +11,14 @@ export default {
   centerY: null,
   pX: null,
   pY: null,
-
+  lineArray: [],
+  maxLineArray: null,
   shape(){
     this.context.fillStyle = 'green'
     this.context.fillRect(this.margin, this.margin, this.shapeWidth, this.shapeHeight)
   },
 
   perimeterLine() {
-
-    //Calc perimeter position
-    let maxTop = this.margin + this.shapeWidth
-    let maxRight = this.margin + this.shapeHeight
-    let maxLeft = this.margin
-    let maxBottom = this.margin
-
-    switch(true){
-      case this.pX < maxTop && this.pY === maxLeft:
-        this.pX++
-        break
-      case this.pX === maxTop && this.pY < maxRight:
-        this.pY++
-        break
-      case this.pY === maxRight && this.pX > maxLeft:
-        this.pX--
-        break
-      case this.pX === maxLeft && this.pY > maxBottom:
-        this.pY--
-        break
-    }
 
     // create perimeter dot
     this.context.fillStyle = '#66cdaa'
@@ -61,9 +41,45 @@ export default {
     this.context.strokeStyle = '#66cdaa'
     this.context.stroke()
 
+    //Calc perimeter position
+    let maxTop = this.margin + this.shapeWidth
+    let maxRight = this.margin + this.shapeHeight
+    let maxLeft = this.margin
+    let maxBottom = this.margin
+
+    switch(true){
+      case this.pX < maxTop && this.pY === maxLeft:
+        this.pX++
+        break
+      case this.pX === maxTop && this.pY < maxRight:
+        this.pY++
+        break
+      case this.pY === maxRight && this.pX > maxLeft:
+        this.pX--
+        break
+      case this.pX === maxLeft && this.pY > maxBottom:
+        this.pY--
+        break
+    }
+
   },
 
   graphLine(){
+
+    this.lineArray.unshift(this.pY)
+
+    if( this.lineArray.length > this.maxLineArray )
+      this.lineArray.pop()
+
+    let groupIndex = 0
+
+    for ( let index = 0 ; index < this.lineArray.length; index++ ){
+      this.context.fillStyle = '#66cdaa'
+      this.context.beginPath()
+      this.context.arc(this.graphLineX + index, this.lineArray[index], 2, 0, Math.PI*2, true)
+      this.context.fill()
+      this.context.closePath()
+    }
 
   },
 
@@ -91,6 +107,8 @@ export default {
       this.pY = this.margin
       this.centerX = this.margin + ( this.shapeWidth / 2 )
       this.centerY = this.margin + ( this.shapeHeight / 2 )
+      this.graphLineX = ( this.margin * 2 ) + this.shapeWidth
+      this.maxLineArray = this.canvas.width - ( this.margin * 3 ) - this.shapeWidth
       this.loop()
     }
   }

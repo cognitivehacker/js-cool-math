@@ -1,3 +1,5 @@
+import canvas from '@/canvas'
+
 export default {
   name: "square",
   context: null,
@@ -5,20 +7,10 @@ export default {
   margin: null,
   shapeWidth: 100,
   shapeHeight: 100,
-  shapePerimeter: null,
   centerX: null,
   centerY: null,
   pX: null,
   pY: null,
-  step: 0,
-  animationFrame(callback){
-    var requestAnimationFrame = window.requestAnimationFrame(callback) ||
-      window.webkitRequestAnimationFrame(callback) ||
-      window.mozRequestAnimationFrame(callback) ||
-      window.oRequestAnimationFrame(callback) ||
-      window.msRequestAnimationFrame(callback) ||
-    function(callback){ window.setTimeout(callback, 1000/60) }
-  },
   shape(){
     this.context.fillStyle = 'green'
     this.context.fillRect(this.margin, this.margin, this.shapeWidth, this.shapeHeight)
@@ -27,11 +19,8 @@ export default {
     this.context.beginPath();
     this.context.arc(this.centerX, this.centerY, 5, 0, Math.PI*2, true)
     this.context.fill();
-
   },
-  dotDraw(pX, pY){
 
-  },
   line(){
     this.context.beginPath()
     this.context.moveTo(this.centerX, this.centerY)
@@ -41,6 +30,7 @@ export default {
     this.context.strokeStyle = '#66cdaa';
     this.context.stroke();
   },
+
   dot() {
 
     let maxTop = this.margin + this.shapeWidth
@@ -79,7 +69,7 @@ export default {
     this.shape()
     this.dot()
     this.line()
-    this.animationFrame(this.loop.bind(this))
+    canvas.animationFrame(this.loop.bind(this))
   },
   init(){
     window.onload = () => {

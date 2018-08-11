@@ -3,8 +3,8 @@ export default {
   context: null,
   canvas: null,
   margin: null,
-  shapeWidht: 100,
-  shapeHeigh: 100,
+  shapeWidth: 100,
+  shapeHeight: 100,
   shapePerimeter: null,
   pxStart: null,
   pyStart: null,
@@ -21,7 +21,16 @@ export default {
   },
   shape(){
     this.context.fillStyle = 'green'
-    this.context.fillRect(this.margin, this.margin, this.shapeWidht, this.shapeHeigh)
+    this.context.fillRect(this.margin, this.margin, this.shapeWidth, this.shapeHeight)
+
+    let centerX = (this.margin + this.shapeWidth) / 2
+    let centerY = (this.margin + this.shapeHeight) / 2
+
+    //this.context.fillStyle = 'white';
+    //this.context.beginPath();
+    //this.context.arc(pX, pY, 5, 0, Math.PI*2, true)
+    //this.context.fill();
+
   },
   dot(pX, pY){
     this.context.fillStyle = 'white';
@@ -30,8 +39,9 @@ export default {
     this.context.fill();
   },
   run() {
-    let maxTop = this.margin + this.shapeWidht
-    let maxRight = this.margin + this.shapeHeigh
+
+    let maxTop = this.margin + this.shapeWidth
+    let maxRight = this.margin + this.shapeHeight
     let maxLeft = this.margin
     let maxBottom = this.margin
 
@@ -54,6 +64,7 @@ export default {
   clear(){
     this.context.fillStyle = 'black';
     this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
+
   },
   loop(){
     this.clear()
@@ -66,8 +77,8 @@ export default {
     window.onload = () => {
       this.canvas = document.getElementById(this.name)
     	this.context = this.canvas.getContext('2d')
-      this.margin = ( this.canvas.height - this.shapeHeigh ) / 2
-      this.shapePerimeter = ( this.shapeWidht * 2 ) + ( this.shapeHeigh * 2 )
+      this.margin = ( this.canvas.height - this.shapeHeight ) / 2
+      this.shapePerimeter = ( this.shapeWidth * 2 ) + ( this.shapeHeight * 2 )
       this.pxStart = this.pX = this.margin
       this.pyStart = this.pY = this.margin
       this.loop()

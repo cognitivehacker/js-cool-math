@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  js-cool-math:
+    container_name: js-cool-math
+    build: .
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/opt/js-cool-math

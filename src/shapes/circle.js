@@ -2,25 +2,25 @@ import Canvas from '@/helper/canvas'
 import graphLine from '@/helper/graph-line'
 
 const canvas = new Canvas()
+console.log('circle', canvas)
 
 export default {
-  name: "square",
+  name: "circle",
   color: '#66cdaa',
-  context: null,
-  canvas: null,
   margin: null,
-  shapeWidth: 100,
-  shapeHeight: 100,
+  raio: 50,
   centerX: null,
   centerY: null,
   pX: null,
   pY: null,
   lineArray: [],
   maxLineArray: null,
-
+  grau: 0,
   shape(){
-    canvas.context.fillStyle = 'green'
-    canvas.context.fillRect(this.margin, this.margin, this.shapeWidth, this.shapeHeight)
+    canvas.context.fillStyle = 'blueviolet'
+    canvas.context.beginPath()
+    canvas.context.arc(this.centerX, this.centerY, this.raio, 0, Math.PI*2, true)
+    canvas.context.fill()
   },
 
   perimeterLine() {
@@ -46,31 +46,20 @@ export default {
     canvas.context.strokeStyle = this.color
     canvas.context.stroke()
 
-    //Calc perimeter position
-    let maxTop = this.margin + this.shapeWidth
-    let maxRight = this.margin + this.shapeHeight
-    let maxLeft = this.margin
-    let maxBottom = this.margin
+    // calc new position
+    let radians = this.grau * Math.PI/180 // graus to radians
+    let adjustPostion  = this.margin + this.raio // adustPosition of element on page
+    this.pX = adjustPostion + ( this.raio * Math.cos(radians) ) // convert radians into coordenates
+    this.pY = adjustPostion + ( this.raio * Math.sin(radians) ) // convert radians into coordenates
 
-    switch(true){
-      case this.pX < maxTop && this.pY === maxLeft:
-        this.pX++
-        break
-      case this.pX === maxTop && this.pY < maxRight:
-        this.pY++
-        break
-      case this.pY === maxRight && this.pX > maxLeft:
-        this.pX--
-        break
-      case this.pX === maxLeft && this.pY > maxBottom:
-        this.pY--
-        break
-    }
+    this.grau++
+    if(this.grau >= 360)
+      this.grau = 0
 
   },
 
   loop(){
-    canvas.clear('black')
+    canvas.clear('blanchedalmond')
     this.shape()
     this.perimeterLine()
     graphLine.draw(canvas.context, this.lineArray, this.maxLineArray, this.graphLineX, this.pY)
@@ -81,15 +70,15 @@ export default {
     graphLine.color = this.color
     window.onload = () => {
       canvas.get(this.name)
-      this.margin = ( canvas.target.height - this.shapeHeight ) / 2
-      this.shapePerimeter = ( this.shapeWidth * 2 ) + ( this.shapeHeight * 2 )
-      this.pX = this.margin
-      this.pY = this.margin
-      this.centerX = this.margin + ( this.shapeWidth / 2 )
-      this.centerY = this.margin + ( this.shapeHeight / 2 )
-      this.graphLineX = ( this.margin * 2 ) + this.shapeWidth
-      this.maxLineArray = canvas.target.width - ( this.margin * 3 ) - this.shapeWidth
+      this.margin = ( canvas.target.height - (this.raio * 2  )) / 2
+      this.pX = this.margin + this.raio * 2
+      this.pY = this.margin + this.raio
+      this.centerX = this.margin + this.raio
+      this.centerY = this.margin + this.raio
+      this.graphLineX = ( this.margin * 2 ) + ( this.raio * 2 )
+      this.maxLineArray = canvas.target.width - ( this.margin * 3 ) - ( this.raio * 2 )
       this.loop()
     }
+    return 'started'
   }
 }

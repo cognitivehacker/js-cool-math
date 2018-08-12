@@ -1,4 +1,4 @@
-export default class canvas {
+export default class Canvas {
   constructor(){
     this.target = null
     this.context = null
@@ -19,4 +19,5 @@ export default class canvas {
     this.context.fillStyle = color
     this.context.fillRect(0,0, this.target.width, this.target.height)
   }
+
 }

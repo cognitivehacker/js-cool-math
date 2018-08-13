@@ -1,5 +1,6 @@
-import square from '@/shapes/square'
-import circle from '@/shapes/circle'
+import canvas from '@/helper/canvas'
 
-console.log(circle.name, circle.init())
+canvas.init('graphs', '2d', [1, 2, 3])
+
+//console.log(circle.name, circle.init())
 //console.log(square.name, square.init())
